@@ -2,7 +2,7 @@ const std = @import("std");
 
 pub fn build(b: *std.Build) void {
     const ihex = b.addModule("ihex", .{
-        .source_file = .{ .path = "ihex.zig" },
+        .root_source_file = .{ .path = "ihex.zig" },
     });
 
     const tests = b.addTest(.{
@@ -10,7 +10,7 @@ pub fn build(b: *std.Build) void {
         .target = b.standardTargetOptions(.{}),
         .optimize = b.standardOptimizeOption(.{}),
     });
-    tests.addModule("ihex", ihex);
+    tests.root_module.addImport("ihex", ihex);
     const run_tests = b.addRunArtifact(tests);
     const test_step = b.step("test", "Run all tests");
     test_step.dependOn(&run_tests.step);
