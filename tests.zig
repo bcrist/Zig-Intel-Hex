@@ -2,9 +2,9 @@ test "pretty=false" {
     const binary = "abcdef123\x00\x10\x01asdf\r\n0\x00";
 
     var buf: [1024]u8 = undefined;
-    var stream = std.io.fixedBufferStream(&buf);
+    var w = std.io.Writer.fixed(&buf);
 
-    var writer = ihex.writer(u32, stream.writer(), .{
+    var writer = ihex.writer(u32, &w, .{
         .line_ending = "\n"
     });
 
@@ -17,16 +17,16 @@ test "pretty=false" {
         \\:040000050000ABCD7F
         \\:00000001FF
         \\
-        , stream.getWritten());
+        , w.buffered());
 }
 
 test "pretty=true" {
     const binary = "abcdef123\x00\x10\x01asdf\r\n0\x00";
 
     var buf: [1024]u8 = undefined;
-    var stream = std.io.fixedBufferStream(&buf);
+    var w = std.io.Writer.fixed(&buf);
 
-    var writer = ihex.writer(u32, stream.writer(), .{
+    var writer = ihex.writer(u32, &w, .{
         .line_ending = "\n",
         .pretty = true,
     });
@@ -40,7 +40,7 @@ test "pretty=true" {
         \\:04 0000 05 0000ABCD 7F
         \\:00 0000 01  FF
         \\
-        , stream.getWritten());
+        , w.buffered());
 }
 
 const ihex = @import("ihex");

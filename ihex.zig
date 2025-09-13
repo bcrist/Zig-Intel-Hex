@@ -1,5 +1,5 @@
-pub fn writer(comptime Address: type, inner_writer: anytype, options: Writer_Options) Writer(Address, @TypeOf(inner_writer)) {
-    return Writer(Address, @TypeOf(inner_writer)).init(inner_writer, options);
+pub fn writer(comptime Address: type, w: *std.io.Writer, options: Writer_Options) Writer(Address) {
+    return Writer(Address).init(w, options);
 }
 
 pub const Writer_Options = struct {
@@ -8,23 +8,23 @@ pub const Writer_Options = struct {
 };
 
 // Note segmented modes are not supported at this time.
-pub fn Writer(comptime Address: type, comptime Inner_Writer: type) type {
+pub fn Writer(comptime Address: type) type {
     switch (@typeInfo(Address).int.bits) {
         16, 32 => {},
         else => @compileError("Invalid address type; must be u32 or u16"),
     }
 
     return struct {
-        inner: Inner_Writer,
+        inner: *std.io.Writer,
         pretty: bool,
         line_ending: []const u8,
         last_address_ext: ?u16 = null,
 
         const Self = @This();
 
-        pub fn init(inner_writer: Inner_Writer, options: Writer_Options) Self {
+        pub fn init(w: *std.io.Writer, options: Writer_Options) Self {
             return .{
-                .inner = inner_writer,
+                .inner = w,
                 .line_ending = options.line_ending orelse default_line_ending(),
                 .pretty = options.pretty,
             };
