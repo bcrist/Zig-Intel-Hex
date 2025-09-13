@@ -2,16 +2,18 @@ const std = @import("std");
 
 pub fn build(b: *std.Build) void {
     const ihex = b.addModule("ihex", .{
-        .root_source_file = .{ .path = "ihex.zig" },
+        .root_source_file = b.path("ihex.zig"),
     });
 
     const tests = b.addTest(.{
-        .root_source_file = .{ .path = "tests.zig"},
-        .target = b.standardTargetOptions(.{}),
-        .optimize = b.standardOptimizeOption(.{}),
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("tests.zig"),
+            .target = b.standardTargetOptions(.{}),
+            .optimize = b.standardOptimizeOption(.{}),
+            .imports = &.{
+                .{ .name = "ihex", .module = ihex },
+            },
+        }),
     });
-    tests.root_module.addImport("ihex", ihex);
-    const run_tests = b.addRunArtifact(tests);
-    const test_step = b.step("test", "Run all tests");
-    test_step.dependOn(&run_tests.step);
+    b.step("test", "Run all tests").dependOn(&b.addRunArtifact(tests).step);
 }

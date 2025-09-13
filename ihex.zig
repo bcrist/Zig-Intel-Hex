@@ -9,7 +9,7 @@ pub const Writer_Options = struct {
 
 // Note segmented modes are not supported at this time.
 pub fn Writer(comptime Address: type, comptime Inner_Writer: type) type {
-    switch (@typeInfo(Address).Int.bits) {
+    switch (@typeInfo(Address).int.bits) {
         16, 32 => {},
         else => @compileError("Invalid address type; must be u32 or u16"),
     }
@@ -85,7 +85,7 @@ pub fn Writer(comptime Address: type, comptime Inner_Writer: type) type {
             }
 
             const signed_checksum: i8 = @bitCast(checksum);
-            try self.write_byte(@bitCast(-signed_checksum));
+            try self.write_byte(@bitCast(-%signed_checksum));
 
             try self.inner.writeAll(self.line_ending);
         }
@@ -98,10 +98,10 @@ pub fn Writer(comptime Address: type, comptime Inner_Writer: type) type {
                 var bytes: Address = @intCast(@min(remaining.len, 32));
                 if (@bitSizeOf(Address) > 16) {
                     const start_ext: u16 = @truncate(start >> 16);
-                    const end_ext: u16 = @truncate((address + bytes) >> 16);
+                    const end_ext: u16 = @truncate((start + bytes) >> 16);
                     if (start_ext != end_ext) {
-                        const end = (address + bytes) & 0xFFFF0000;
-                        bytes = end - address;
+                        const end = (start + bytes) & 0xFFFF0000;
+                        bytes = end - start;
                     }
 
                     if (start_ext != self.last_address_ext) {

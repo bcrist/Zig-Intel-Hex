@@ -1,7 +1,8 @@
 .{
-    .name = "Zig-Intel-Hex",
+    .name = .ihex,
     .version = "1.1.0",
-    .minimum_zig_version = "0.12.0-dev.2063+804cee3b9",
+    .minimum_zig_version = "0.15.1",
+    .fingerprint = 0x67fa9be1dc934f17,
     .dependencies = .{},
     .paths = .{
         "build.zig",
