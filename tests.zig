@@ -2,7 +2,7 @@ test "pretty=false" {
     const binary = "abcdef123\x00\x10\x01asdf\r\n0\x00";
 
     var buf: [1024]u8 = undefined;
-    var w = std.io.Writer.fixed(&buf);
+    var w = std.Io.Writer.fixed(&buf);
 
     var writer = ihex.writer(u32, &w, .{
         .line_ending = "\n"
@@ -24,7 +24,7 @@ test "pretty=true" {
     const binary = "abcdef123\x00\x10\x01asdf\r\n0\x00";
 
     var buf: [1024]u8 = undefined;
-    var w = std.io.Writer.fixed(&buf);
+    var w = std.Io.Writer.fixed(&buf);
 
     var writer = ihex.writer(u32, &w, .{
         .line_ending = "\n",
