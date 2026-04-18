@@ -1,4 +1,4 @@
-pub fn writer(comptime Address: type, w: *std.io.Writer, options: Writer_Options) Writer(Address) {
+pub fn writer(comptime Address: type, w: *std.Io.Writer, options: Writer_Options) Writer(Address) {
     return Writer(Address).init(w, options);
 }
 
@@ -15,14 +15,14 @@ pub fn Writer(comptime Address: type) type {
     }
 
     return struct {
-        inner: *std.io.Writer,
+        inner: *std.Io.Writer,
         pretty: bool,
         line_ending: []const u8,
         last_address_ext: ?u16 = null,
 
         const Self = @This();
 
-        pub fn init(w: *std.io.Writer, options: Writer_Options) Self {
+        pub fn init(w: *std.Io.Writer, options: Writer_Options) Self {
             return .{
                 .inner = w,
                 .line_ending = options.line_ending orelse default_line_ending(),
