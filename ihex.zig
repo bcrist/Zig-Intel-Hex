@@ -35,7 +35,7 @@ pub fn Writer(comptime Address: type) type {
             try self.inner.writeByte("0123456789ABCDEF"[@as(u4, @truncate(d))]);
         }
 
-        const Record_Type = enum (u8) {
+        const Record_Type = enum(u8) {
             data = 0,
             end_of_file = 1,
             extended_address = 4,
@@ -67,7 +67,7 @@ pub fn Writer(comptime Address: type) type {
                 try self.inner.writeByte(' ');
             }
 
-            const record_type_byte = @intFromEnum(record_type);
+            const record_type_byte = @backingInt(record_type);
             try self.write_byte(record_type_byte);
             checksum +%= record_type_byte;
 

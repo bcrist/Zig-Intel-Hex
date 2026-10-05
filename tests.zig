@@ -4,9 +4,7 @@ test "pretty=false" {
     var buf: [1024]u8 = undefined;
     var w = std.Io.Writer.fixed(&buf);
 
-    var writer = ihex.writer(u32, &w, .{
-        .line_ending = "\n"
-    });
+    var writer = ihex.writer(u32, &w, .{ .line_ending = "\n" });
 
     try writer.write(0x1234567, binary);
     try writer.finish(0xABCD);
@@ -17,7 +15,7 @@ test "pretty=false" {
         \\:040000050000ABCD7F
         \\:00000001FF
         \\
-        , w.buffered());
+    , w.buffered());
 }
 
 test "pretty=true" {
@@ -40,7 +38,7 @@ test "pretty=true" {
         \\:04 0000 05 0000ABCD 7F
         \\:00 0000 01  FF
         \\
-        , w.buffered());
+    , w.buffered());
 }
 
 const ihex = @import("ihex");
