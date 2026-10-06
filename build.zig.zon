@@ -2,7 +2,7 @@
     .name = .ihex,
     .fingerprint = 0x67fa9be1dc934f17,
     .version = "1.2.0",
-    .minimum_zig_version = "0.16.0",
+    .minimum_zig_version = "0.17.0",
     .dependencies = .{},
     .paths = .{
         "build.zig",
